@@ -1,0 +1,137 @@
+---
+- name: Create filesystem, PV, LV, and mount
+  hosts: all
+    #  user: 1kathirk
+  become: yes
+  tasks:
+    #    - name: Create PV - sap   /sapmnt
+    #  lvg:
+    #    vg: vg_POSSBXCI       # Replace with your desired volume group name
+    #    pvs: /dev/nvme1n1
+
+    - name: Create LV   /sapmnt
+      lvol:
+        vg: vg_POSSBXCI      # Replace with your desired volume group name
+        lv: lv_sapmnt        # Replace with your desired logical volume name
+        size: 30G         # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem   /sapmnt
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_POSSBXCI/lv_sapmnt
+        force: yes
+
+    - name: Mount filesystem   /sapmnt
+      mount:
+        path: /sapmnt   # Replace with your desired mount path
+        src: /dev/vg_POSSBXCI/lv_sapmnt
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+
+    - name: Create LV   /sybase/POD
+      lvol:
+        vg: vg_POSSBXCI       # Replace with your desired volume group name
+        lv: lv_sappod       # Replace with your desired logical volume name
+        size: 50G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem  /sybase/POD
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_POSSBXCI/lv_sappod
+        force: yes
+
+    - name: Mount filesystem  /sybase/POD
+      mount:
+        path: /sybase/POD  # Replace with your desired mount path
+        src: /dev/vg_POSSBXCI/lv_sappod
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV    /usr/sap/trans
+      lvol:
+        vg: vg_POSSBXCI
+        lv: lv_saptrans       # Replace with your desired logical volume name
+        size: 50G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem  /usr/sap/trans
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_POSSBXCI/lv_saptrans
+        force: yes
+
+    - name: Mount filesystem  /usr/sap/trans
+      mount:
+        path: /usr/sap/trans   # Replace with your desired mount path
+        src: /dev/vg_POSSBXCI/lv_saptrans
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV     /usr/sap
+      lvol:
+        vg: vg_POSSBXCI
+        lv: lv_usrsap       # Replace with your desired logical volume name
+        size: 50G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem     /usr/sap
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_POSSBXCI/lv_usrsap
+        force: yes
+
+    - name: Mount filesystem   /usr/sap
+      mount:
+        path: /usr/sap   # Replace with your desired mount path
+        src: /dev/vg_POSSBXCI/lv_usrsap
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV  SAPLOG
+      lvol:
+        vg: vg_POSSBXCI
+        lv: lv_sappodlog       # Replace with your desired logical volume name
+        size: 100G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem  SAPLOG
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_POSSBXCI/lv_sappodlog
+        force: yes
+
+    - name: Mount filesystem SAPLOG
+      mount:
+        path: /sybase/POD/saplog    # Replace with your desired mount path
+        src: /dev/vg_POSSBXCI/lv_sappodlog
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV  SAPDATA
+      lvol:
+        vg: vg_POSSBXCI
+        lv: lv_sappoddata       # Replace with your desired logical volume name
+        size: 100G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem  SAPLOG
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_POSSBXCI/lv_sappoddata
+        force: yes
+
+    - name: Mount filesystem SAPDATA
+      mount:
+        path: /sybase/POD/sapdata    # Replace with your desired mount path
+        src: /dev/vg_POSSBXCI/lv_sappoddata
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
