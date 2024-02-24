@@ -1,0 +1,158 @@
+---
+- name: Create filesystem, PV, LV, and mount
+  hosts: all
+  user: 1kathirk
+  become: yes
+  tasks:
+    - name: Create PV - sap
+      lvg:
+        vg: vg_ECCSBXCI       # Replace with your desired volume group name
+        pvs: /dev/nvme1n1
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI      # Replace with your desired volume group name
+        lv: lv_sapmnt        # Replace with your desired logical volume name
+        size: 50G         # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_sapmnt
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /sapmnt   # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_sapmnt
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI       # Replace with your desired volume group name
+        lv: lv_sapmedia       # Replace with your desired logical volume name
+        size: 100G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_sapmedia
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /sapmedia  # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_sapmedia
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI       # Replace with your desired volume group name
+        lv: lv_sap       # Replace with your desired logical volume name
+        size: 200G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_sap
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /usr/sap  # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_sap
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI
+        lv: lv_saptrans       # Replace with your desired logical volume name
+        size: 50G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_saptrans
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /usr/sap/trans   # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_saptrans
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI
+        lv: lv_hanadata       # Replace with your desired logical volume name
+        size: 250G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_hanadata
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /hana/data   # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_hanadata
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI
+        lv: lv_hanalog       # Replace with your desired logical volume name
+        size: 70G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_hanalog
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /hana/log    # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_hanalog
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
+    - name: Create LV
+      lvol:
+        vg: vg_ECCSBXCI
+        lv: lv_hanashared       # Replace with your desired logical volume name
+        size: 50G        # Replace with your desired size
+        force: yes
+
+    - name: Create filesystem
+      filesystem:
+        fstype: xfs      # Replace with your desired filesystem type
+        dev: /dev/vg_ECCSBXCI/lv_hanashared
+        force: yes
+
+    - name: Mount filesystem
+      mount:
+        path: /hana/shared    # Replace with your desired mount path
+        src: /dev/vg_ECCSBXCI/lv_hanashared
+        fstype: xfs      # Replace with your desired filesystem type
+        state: mounted
+        opts: defaults
+
